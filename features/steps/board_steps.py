@@ -66,14 +66,6 @@ def step_impl(context, player):
     assert context.board.shots[player_id]
 
 
-@then("it's Player {player_id:d}'s turn")
-def step_impl(context, player_id):
-    """
-    :type context: behave.runner.Context
-    """
-    assert context.board.current_player == player_id
-
-
 @when("Player {player_id:d} places a ship")
 def step_impl(context, player_id):
     """
@@ -96,30 +88,30 @@ def step_impl(context, player_id):
     assert context.board.ships[player_id]
 
 
-@given("a game with one ship")
-def step_impl(context):
-    """
-    :type context: behave.runner.Context
-    """
-    context.b = Board()
-    context.b.place_ship(1, start_coordinate='A1', length=1, orientation='DOWN')
-    context.amount_of_ships = len(context.b.ships[1])
-
-
-@when("Player 1 places a ship in the same location")
-def step_impl(context):
+@when("Player {player_id:d} places a ship in the same location")
+def step_impl(context, player_id):
     """
     :type context: behave.runner.Context
     """
     try:
-        context.b.place_ship(1, start_coordinate='A1', length=1, orientation='RIGHT')
+        context.board.place_ship(player_id, start_coordinate='A1', length=1, orientation='RIGHT')
     except PlacementError:
         pass
 
 
-@then("the ship is not placed")
-def step_impl(context):
+@then("the ship is not placed for Player {player_id:d}")
+def step_impl(context, player_id):
     """
     :type context: behave.runner.Context
     """
-    assert len(context.b.ships[1]) == context.amount_of_ships
+    assert len(context.board.ships[player_id]) == context.amount_of_ships
+
+
+@given("a game with one ship for Player {player_id:d}")
+def step_impl(context, player_id):
+    """
+    :type context: behave.runner.Context
+    """
+    context.board = Board()
+    context.board.place_ship(player_id, start_coordinate='A1', length=1, orientation='DOWN')
+    context.amount_of_ships = len(context.board.ships[1])

@@ -1,8 +1,4 @@
-from itertools import product, chain, zip_longest
-
-
-def is_player_element_empty(board):
-    pass
+from itertools import product, zip_longest
 
 
 class CoordinateError(BaseException):
@@ -33,16 +29,19 @@ class Board:
         if coordinates not in self.cell_coordinates:
             raise CoordinateError("coordinates {} do not exist".format(coordinates))
         self.shots[player].append(coordinates)
+
+    def next_player(self):
         self.current_player += 1
         if self.current_player > self.players:
             self.current_player = 1
+        return self.current_player
 
     def place_ship(self, player, start_coordinate, length, orientation):
         ship_coordinates = self.determine_possible_ship_coordinates(length, orientation, start_coordinate)
 
         if self.is_ship_out_of_bounds(length, ship_coordinates):
             raise PlacementError('Ship place out of bounds')
-        if self.is_ship_overlapping(ship_coordinates):
+        if self.is_ship_overlapping(player, ship_coordinates):
             raise PlacementError('One or more of the coordinates are already occupied')
 
         ship = zip_longest(ship_coordinates, [length])
@@ -64,8 +63,8 @@ class Board:
     def is_ship_out_of_bounds(length, ship_coordinates):
         return len(ship_coordinates) != length
 
-    def is_ship_overlapping(self, ship_coordinates):
-        player = self.current_player
+    def is_ship_overlapping(self, player, ship_coordinates):
         for occupied_cells in self.ships[player]:
             coordinate, ship = occupied_cells
             return coordinate in ship_coordinates
+

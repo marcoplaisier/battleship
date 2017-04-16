@@ -87,3 +87,11 @@ def test_some_placements_inside_of_bounds(get_board, random_player, coordinate, 
         i = 0
     board.place_ship(random_player, orientation=orientation, length=length - 1, start_coordinate=coordinate)
     assert board.ships[random_player]
+
+
+def test_next_player(get_board):
+    board = get_board
+    assert board.current_player == 1
+    player = board.next_player()
+    assert player == 2
+    assert board.current_player == 2
