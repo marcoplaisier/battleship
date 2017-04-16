@@ -13,7 +13,6 @@ def step_impl(context):
     :type context: behave.runner.Context
     """
     assert context.board
-    assert context.board.is_empty()
     assert context.board.cell_coordinates
 
 
@@ -53,7 +52,7 @@ def step_impl(context, player_id):
     shots_already_fired = set(game_board.shots[player_id])
     possible_locations = list(all_coordinates - shots_already_fired)
     shot_location = random.choice(possible_locations)
-    game_board.fire(player=player_id, coordinates=shot_location)
+    game_board.fire(player=player_id, coordinate=shot_location)
     context.shot_location = shot_location
 
 

@@ -15,5 +15,6 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install -I behave==1.2.4; fi
   - "pip install -r requirements.txt"
 # command to run tests
-script: pytest
-script: behave
+script:
+  - pytest
+  - behave
