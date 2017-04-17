@@ -2,7 +2,7 @@ import random
 
 from behave import *
 
-from board import Board, PlacementError
+from game.board import Board, PlacementError
 
 use_step_matcher("parse")
 
@@ -13,7 +13,6 @@ def step_impl(context):
     :type context: behave.runner.Context
     """
     assert context.board
-    assert context.board.is_empty()
     assert context.board.cell_coordinates
 
 
@@ -53,7 +52,7 @@ def step_impl(context, player_id):
     shots_already_fired = set(game_board.shots[player_id])
     possible_locations = list(all_coordinates - shots_already_fired)
     shot_location = random.choice(possible_locations)
-    game_board.fire(player=player_id, coordinates=shot_location)
+    game_board.fire(player=player_id, coordinate=shot_location)
     context.shot_location = shot_location
 
 
@@ -71,7 +70,7 @@ def step_impl(context, player_id):
     """
     :type context: behave.runner.Context
     """
-    start_coordinate = 'A1'
+    start_coordinate = (0, 1)
     length = 5
     orientation = "DOWN"
     context.board.place_ship(player=player_id,
@@ -94,7 +93,7 @@ def step_impl(context, player_id):
     :type context: behave.runner.Context
     """
     try:
-        context.board.place_ship(player_id, start_coordinate='A1', length=1, orientation='RIGHT')
+        context.board.place_ship(player_id, start_coordinate=(0, 0), length=1, orientation='RIGHT')
     except PlacementError:
         pass
 
@@ -113,5 +112,5 @@ def step_impl(context, player_id):
     :type context: behave.runner.Context
     """
     context.board = Board()
-    context.board.place_ship(player_id, start_coordinate='A1', length=1, orientation='DOWN')
+    context.board.place_ship(player_id, start_coordinate=(0, 0), length=1, orientation='DOWN')
     context.amount_of_ships = len(context.board.ships[1])
