@@ -1,4 +1,4 @@
-from itertools import product, zip_longest
+from itertools import product
 
 
 class CoordinateError(BaseException):
@@ -54,11 +54,15 @@ class Board:
     def is_ship_out_of_bounds(self, ship_coordinates):
         for column, row in ship_coordinates:
             if column not in self.COLUMNS:
-                return True
+                out_of_bounds = True
+                break
             elif row not in self.ROWS:
-                return True
+                out_of_bounds = True
+                break
         else:
-            return False
+            out_of_bounds = False
+
+        return out_of_bounds
 
 
 class Ship:
