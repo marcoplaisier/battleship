@@ -24,36 +24,38 @@ def test_fire(get_board, random_player):
 
 def test_fire_not_existing_coordinate(get_board, random_player):
     with pytest.raises(CoordinateError):
-        get_board.fire(random_player, 'Z0')
+        get_board.fire(random_player, (11, 20))
 
 
 def test_place_ship(get_board, random_player):
     assert not get_board.ships[random_player]
-    get_board.place_ship(random_player, orientation='DOWN', length=1, start_coordinate='A1')
+    get_board.place_ship(random_player, orientation='DOWN', length=1, start_coordinate=(0, 0))
     assert get_board.ships[random_player]
 
 
 def test_place_ship_out_of_bounds_right(get_board, random_player):
     assert not get_board.ships[random_player]
     with pytest.raises(PlacementError):
-        get_board.place_ship(random_player, orientation='RIGHT', length=2, start_coordinate='J1')
+        get_board.place_ship(random_player, orientation='RIGHT', length=2, start_coordinate=(10, 11))
     assert not get_board.ships[random_player]
 
 
 @pytest.mark.parametrize("coordinate,length,orientation", [
-    ('A8', 2, "DOWN"), ('B8', 2, "DOWN"), ('C8', 2, "DOWN"), ('D8', 2, "DOWN"), ('E8', 2, "DOWN"), ('F8', 2, "DOWN"),
-    ('G8', 2, "DOWN"), ('H8', 2, "DOWN"), ('I8', 2, "DOWN"), ('J8', 2, "DOWN"), ('A7', 3, "DOWN"), ('B7', 3, "DOWN"),
-    ('C7', 3, "DOWN"), ('D7', 3, "DOWN"), ('E7', 3, "DOWN"), ('F7', 3, "DOWN"), ('G7', 3, "DOWN"), ('H7', 3, "DOWN"),
-    ('I7', 3, "DOWN"), ('J7', 3, "DOWN"), ('A6', 4, "DOWN"), ('B6', 4, "DOWN"), ('C6', 4, "DOWN"), ('D6', 4, "DOWN"),
-    ('E6', 4, "DOWN"), ('F6', 4, "DOWN"), ('G6', 4, "DOWN"), ('H6', 4, "DOWN"), ('I6', 4, "DOWN"), ('J6', 4, "DOWN"),
-    ('A5', 5, "DOWN"), ('B5', 5, "DOWN"), ('C5', 5, "DOWN"), ('D5', 5, "DOWN"), ('E5', 5, "DOWN"), ('F5', 5, "DOWN"),
-    ('G5', 5, "DOWN"), ('H5', 5, "DOWN"), ('I5', 5, "DOWN"), ('J5', 5, "DOWN"), ('J1', 2, "RIGHT"), ('J2', 2, "RIGHT"),
-    ('J3', 2, "RIGHT"), ('J4', 2, "RIGHT"), ('J5', 2, "RIGHT"), ('J6', 2, "RIGHT"), ('J7', 2, "RIGHT"),
-    ('J8', 2, "RIGHT"), ('I1', 3, "RIGHT"), ('I2', 3, "RIGHT"), ('I3', 3, "RIGHT"), ('I4', 3, "RIGHT"),
-    ('I5', 3, "RIGHT"), ('I6', 3, "RIGHT"), ('I7', 3, "RIGHT"), ('I8', 3, "RIGHT"), ('H1', 4, "RIGHT"),
-    ('H4', 4, "RIGHT"), ('H3', 4, "RIGHT"), ('H4', 4, "RIGHT"), ('H5', 4, "RIGHT"), ('H6', 4, "RIGHT"),
-    ('H7', 4, "RIGHT"), ('H8', 4, "RIGHT"), ('G1', 5, "RIGHT"), ('G5', 5, "RIGHT"), ('G3', 5, "RIGHT"),
-    ('G4', 5, "RIGHT"), ('G5', 5, "RIGHT"), ('G6', 5, "RIGHT"), ('G7', 5, "RIGHT"), ('G8', 5, "RIGHT")
+    ((0, 7), 2, "DOWN"), ((1, 8), 2, "DOWN"), ((2, 7), 2, "DOWN"), ((3, 8), 2, "DOWN"), ((4, 8), 2, "DOWN"),
+    ((5, 7), 2, "DOWN"), ((6, 7), 2, "DOWN"), ((7, 7), 2, "DOWN"), ((8, 8), 2, "DOWN"), ((9, 8), 2, "DOWN"),
+    ((0, 7), 3, "DOWN"), ((1, 7), 3, "DOWN"), ((2, 7), 3, "DOWN"), ((3, 7), 3, "DOWN"), ((4, 7), 3, "DOWN"),
+    ((5, 7), 3, "DOWN"), ((6, 7), 3, "DOWN"), ((7, 7), 3, "DOWN"), ((8, 7), 3, "DOWN"), ((9, 7), 3, "DOWN"),
+    ((0, 6), 4, "DOWN"), ((1, 6), 4, "DOWN"), ((2, 6), 4, "DOWN"), ((3, 6), 4, "DOWN"), ((4, 6), 4, "DOWN"),
+    ((5, 6), 4, "DOWN"), ((6, 6), 4, "DOWN"), ((7, 6), 4, "DOWN"), ((8, 6), 4, "DOWN"), ((9, 6), 4, "DOWN"),
+    ((0, 5), 5, "DOWN"), ((1, 5), 5, "DOWN"), ((2, 5), 5, "DOWN"), ((3, 5), 5, "DOWN"), ((4, 5), 5, "DOWN"),
+    ((5, 5), 5, "DOWN"), ((6, 5), 5, "DOWN"), ((7, 5), 5, "DOWN"), ((8, 5), 5, "DOWN"), ((9, 5), 5, "DOWN"),
+    ((9, 1), 2, "RIGHT"), ((9, 2), 2, "RIGHT"), ((9, 3), 2, "RIGHT"), ((9, 4), 2, "RIGHT"), ((9, 5), 2, "RIGHT"),
+    ((9, 6), 2, "RIGHT"), ((9, 7), 2, "RIGHT"), ((9, 8), 2, "RIGHT"), ((8, 1), 3, "RIGHT"), ((8, 2), 3, "RIGHT"),
+    ((8, 3), 3, "RIGHT"), ((8, 4), 3, "RIGHT"), ((8, 5), 3, "RIGHT"), ((8, 6), 3, "RIGHT"), ((8, 7), 3, "RIGHT"),
+    ((8, 8), 3, "RIGHT"), ((7, 1), 4, "RIGHT"), ((7, 4), 4, "RIGHT"), ((7, 3), 4, "RIGHT"), ((7, 4), 4, "RIGHT"),
+    ((7, 5), 4, "RIGHT"), ((7, 6), 4, "RIGHT"), ((7, 7), 4, "RIGHT"), ((7, 8), 4, "RIGHT"), ((6, 1), 5, "RIGHT"),
+    ((6, 5), 5, "RIGHT"), ((6, 3), 5, "RIGHT"), ((6, 4), 5, "RIGHT"), ((6, 5), 5, "RIGHT"), ((6, 6), 5, "RIGHT"),
+    ((6, 7), 5, "RIGHT"), ((6, 7), 5, "RIGHT")
 ])
 def test_out_of_bounds(get_board, random_player, coordinate, length, orientation):
     board = get_board
@@ -64,26 +66,26 @@ def test_out_of_bounds(get_board, random_player, coordinate, length, orientation
 
 
 @pytest.mark.parametrize("coordinate,length,orientation", [
-    ('A8', 2, "DOWN"), ('B8', 2, "DOWN"), ('C8', 2, "DOWN"), ('D8', 2, "DOWN"), ('E8', 2, "DOWN"), ('F8', 2, "DOWN"),
-    ('G8', 2, "DOWN"), ('H8', 2, "DOWN"), ('I8', 2, "DOWN"), ('J8', 2, "DOWN"), ('A7', 3, "DOWN"), ('B7', 3, "DOWN"),
-    ('C7', 3, "DOWN"), ('D7', 3, "DOWN"), ('E7', 3, "DOWN"), ('F7', 3, "DOWN"), ('G7', 3, "DOWN"), ('H7', 3, "DOWN"),
-    ('I7', 3, "DOWN"), ('J7', 3, "DOWN"), ('A6', 4, "DOWN"), ('B6', 4, "DOWN"), ('C6', 4, "DOWN"), ('D6', 4, "DOWN"),
-    ('E6', 4, "DOWN"), ('F6', 4, "DOWN"), ('G6', 4, "DOWN"), ('H6', 4, "DOWN"), ('I6', 4, "DOWN"), ('J6', 4, "DOWN"),
-    ('A5', 5, "DOWN"), ('B5', 5, "DOWN"), ('C5', 5, "DOWN"), ('D5', 5, "DOWN"), ('E5', 5, "DOWN"), ('F5', 5, "DOWN"),
-    ('G5', 5, "DOWN"), ('H5', 5, "DOWN"), ('I5', 5, "DOWN"), ('J5', 5, "DOWN"), ('J1', 2, "RIGHT"), ('J2', 2, "RIGHT"),
-    ('J3', 2, "RIGHT"), ('J4', 2, "RIGHT"), ('J5', 2, "RIGHT"), ('J6', 2, "RIGHT"), ('J7', 2, "RIGHT"),
-    ('J8', 2, "RIGHT"), ('I1', 3, "RIGHT"), ('I2', 3, "RIGHT"), ('I3', 3, "RIGHT"), ('I4', 3, "RIGHT"),
-    ('I5', 3, "RIGHT"), ('I6', 3, "RIGHT"), ('I7', 3, "RIGHT"), ('I8', 3, "RIGHT"), ('H1', 4, "RIGHT"),
-    ('H4', 4, "RIGHT"), ('H3', 4, "RIGHT"), ('H4', 4, "RIGHT"), ('H5', 4, "RIGHT"), ('H6', 4, "RIGHT"),
-    ('H7', 4, "RIGHT"), ('H8', 4, "RIGHT"), ('G1', 5, "RIGHT"), ('G5', 5, "RIGHT"), ('G3', 5, "RIGHT"),
-    ('G4', 5, "RIGHT"), ('G5', 5, "RIGHT"), ('G6', 5, "RIGHT"), ('G7', 5, "RIGHT"), ('G8', 5, "RIGHT")
+    ((0, 5), 2, "DOWN"), ((1, 6), 2, "DOWN"), ((2, 6), 2, "DOWN"), ((3, 6), 2, "DOWN"), ((4, 6), 2, "DOWN"),
+    ((5, 5), 2, "DOWN"), ((6, 6), 2, "DOWN"), ((7, 6), 2, "DOWN"), ((8, 6), 2, "DOWN"), ((9, 6), 2, "DOWN"),
+    ((0, 4), 3, "DOWN"), ((1, 5), 3, "DOWN"), ((2, 5), 3, "DOWN"), ((3, 5), 3, "DOWN"), ((4, 5), 3, "DOWN"),
+    ((5, 4), 3, "DOWN"), ((6, 5), 3, "DOWN"), ((7, 5), 3, "DOWN"), ((8, 5), 3, "DOWN"), ((9, 5), 3, "DOWN"),
+    ((0, 4), 4, "DOWN"), ((1, 4), 4, "DOWN"), ((2, 4), 4, "DOWN"), ((3, 4), 4, "DOWN"), ((4, 4), 4, "DOWN"),
+    ((5, 4), 4, "DOWN"), ((6, 4), 4, "DOWN"), ((7, 4), 4, "DOWN"), ((8, 4), 4, "DOWN"), ((9, 4), 4, "DOWN"),
+    ((0, 3), 5, "DOWN"), ((1, 3), 5, "DOWN"), ((2, 3), 5, "DOWN"), ((3, 3), 5, "DOWN"), ((4, 3), 5, "DOWN"),
+    ((5, 3), 5, "DOWN"), ((6, 3), 5, "DOWN"), ((7, 3), 5, "DOWN"), ((8, 3), 5, "DOWN"), ((9, 3), 5, "DOWN"),
+    ((7, 0), 2, "RIGHT"), ((7, 1), 2, "RIGHT"), ((7, 2), 2, "RIGHT"), ((7, 3), 2, "RIGHT"), ((7, 4), 2, "RIGHT"),
+    ((7, 5), 2, "RIGHT"), ((7, 6), 2, "RIGHT"), ((7, 7), 2, "RIGHT"), ((7, 1), 3, "RIGHT"), ((7, 2), 3, "RIGHT"),
+    ((7, 3), 3, "RIGHT"), ((6, 4), 3, "RIGHT"), ((7, 5), 3, "RIGHT"), ((7, 6), 3, "RIGHT"), ((7, 7), 3, "RIGHT"),
+    ((6, 7), 3, "RIGHT"), ((6, 1), 4, "RIGHT"), ((6, 4), 4, "RIGHT"), ((6, 3), 4, "RIGHT"), ((6, 4), 4, "RIGHT"),
+    ((6, 5), 4, "RIGHT"), ((6, 6), 4, "RIGHT"), ((6, 7), 4, "RIGHT"), ((5, 1), 5, "RIGHT"), ((5, 5), 5, "RIGHT"),
+    ((5, 3), 5, "RIGHT"), ((5, 4), 5, "RIGHT"), ((5, 5), 5, "RIGHT"), ((5, 6), 5, "RIGHT"), ((5, 7), 5, "RIGHT"),
+    ((5, 7), 5, "RIGHT")
 ])
 def test_some_placements_inside_of_bounds(get_board, random_player, coordinate, length, orientation):
     board = get_board
     assert not board.ships[random_player]
-    if orientation == "RIGHT":
-        i = 0
-    board.place_ship(random_player, orientation=orientation, length=length - 1, start_coordinate=coordinate)
+    board.place_ship(random_player, orientation=orientation, length=length, start_coordinate=coordinate)
     assert board.ships[random_player]
 
 

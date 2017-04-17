@@ -70,7 +70,7 @@ def step_impl(context, player_id):
     """
     :type context: behave.runner.Context
     """
-    start_coordinate = 'A1'
+    start_coordinate = (0, 1)
     length = 5
     orientation = "DOWN"
     context.board.place_ship(player=player_id,
@@ -93,7 +93,7 @@ def step_impl(context, player_id):
     :type context: behave.runner.Context
     """
     try:
-        context.board.place_ship(player_id, start_coordinate='A1', length=1, orientation='RIGHT')
+        context.board.place_ship(player_id, start_coordinate=(0, 0), length=1, orientation='RIGHT')
     except PlacementError:
         pass
 
@@ -112,5 +112,5 @@ def step_impl(context, player_id):
     :type context: behave.runner.Context
     """
     context.board = Board()
-    context.board.place_ship(player_id, start_coordinate='A1', length=1, orientation='DOWN')
+    context.board.place_ship(player_id, start_coordinate=(0, 0), length=1, orientation='DOWN')
     context.amount_of_ships = len(context.board.ships[1])

@@ -10,9 +10,9 @@ class PlacementError(BaseException):
 
 
 class Board:
-    COLUMNS = 'ABCDEFGHIJ'
-    ROWS = '12345678'
-    cell_coordinates = ["".join(cell) for cell in product(COLUMNS, ROWS)]
+    COLUMNS = range(10)
+    ROWS = range(8)
+    cell_coordinates = [cell for cell in product(COLUMNS, ROWS)]
 
     def __init__(self, players=2):
         self.boards = {}
@@ -43,7 +43,7 @@ class Board:
         possible_ship = Ship(start_coordinate=start_coordinate, length=length, orientation=orientation)
         ship_coordinates = possible_ship.coordinates()
 
-        if self.is_ship_out_of_bounds(length, ship_coordinates):
+        if self.is_ship_out_of_bounds(ship_coordinates):
             raise PlacementError('Ship place out of bounds')
         for existing_ship in self.ships[player]:
             if possible_ship.is_overlapping(existing_ship):
@@ -51,9 +51,14 @@ class Board:
 
         self.ships[player].append(possible_ship)
 
-    @staticmethod
-    def is_ship_out_of_bounds(length, ship_coordinates):
-        return len(ship_coordinates) != length
+    def is_ship_out_of_bounds(self, ship_coordinates):
+        for column, row in ship_coordinates:
+            if column not in self.COLUMNS:
+                return True
+            elif row not in self.ROWS:
+                return True
+        else:
+            return False
 
 
 class Ship:
@@ -75,11 +80,9 @@ class Ship:
     def coordinates(self):
         column, row = self.start_coordinate
         if self.orientation == Ship.DOWN:
-            row = int(row) - 1
-            ship_coordinates = [column + str(r) for r in Board.ROWS[row:row + self.length]]
+            ship_coordinates = [(column, r) for r in range(row, row + self.length)]
         elif self.orientation == Ship.RIGHT:
-            column_index = Board.COLUMNS.index(column)
-            ship_coordinates = [c + str(row) for c in Board.COLUMNS[column_index:column_index + self.length]]
+            ship_coordinates = [(c, row) for c in range(column, column + self.length)]
         else:
             raise PlacementError('Orientation unknown')
         return ship_coordinates
