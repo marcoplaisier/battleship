@@ -1,4 +1,4 @@
-from itertools import product
+from itertools import product, chain
 
 
 class CoordinateError(BaseException):
@@ -19,8 +19,25 @@ class Board:
         self.players = players
         self.shots = {player + 1: [] for player in range(players)}
         self.ships = {player + 1: [] for player in range(players)}
-        self.current_player = 1
-        self.other_player = 2
+        self._current_player = 1
+        self._other_player = 2
+
+    @property
+    def current_player(self):
+        return self._current_player
+
+    @property
+    def other_player(self):
+        return self._other_player
+
+    @current_player.setter
+    def current_player(self, player_id):
+        if player_id != self._current_player:
+            self.next_player()
+
+    def next_player(self):
+        self._current_player, self._other_player = self.other_player, self._current_player
+        return self._current_player
 
     def has_lost(self, player):
         if self.ships[player]:
@@ -32,12 +49,7 @@ class Board:
         if coordinate not in self.cell_coordinates:
             raise CoordinateError("coordinates {} do not exist".format(coordinate))
         self.shots[player].append(coordinate)
-
         return any([ship.hit(coordinate) for ship in self.ships[self.other_player]])
-
-    def next_player(self):
-        self.current_player, self.other_player = self.other_player, self.current_player
-        return self.current_player
 
     def place_ship(self, player, start_coordinate, length, orientation):
         possible_ship = Ship(start_coordinate=start_coordinate, length=length, orientation=orientation)
@@ -64,6 +76,15 @@ class Board:
 
         return out_of_bounds
 
+    def hits(self, player):
+        return len(self.hit_coordinates(player))
+
+    def hit_coordinates(self, player):
+        return list(chain.from_iterable([ship.hits for ship in self.ships[player]]))
+
+    def get_possible_moves(self, player):
+        return list(set(self.cell_coordinates) - set(self.shots[player]))
+
 
 class Ship:
     DOWN = "DOWN"
@@ -71,6 +92,8 @@ class Ship:
 
     def __init__(self, start_coordinate=None, orientation=None, length=None):
         self.length = length
+        if not (orientation == self.DOWN or orientation == self.RIGHT):
+            raise PlacementError('Orientation unknown')
         self.orientation = orientation
         self.start_coordinate = start_coordinate
         self.hits = []

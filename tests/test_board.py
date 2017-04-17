@@ -1,7 +1,7 @@
 import random
 import pytest
 
-from game.board import Board, CoordinateError, PlacementError
+from game.board import Board, CoordinateError, PlacementError, Ship
 
 
 @pytest.fixture
@@ -95,3 +95,46 @@ def test_next_player(get_board):
     player = board.next_player()
     assert player == 2
     assert board.current_player == 2
+
+
+def test_hits(get_board, random_player):
+    board = get_board
+    board.current_player = random_player
+    board.place_ship(board.other_player, (0, 0), 2, Ship.DOWN)
+    board.fire(random_player, (0, 0))
+    assert board.hits(board.other_player)
+
+
+def test_multiple_hits(get_board, random_player):
+    board = get_board
+    board.current_player = random_player
+    board.place_ship(board.other_player, (0, 0), 2, Ship.DOWN)
+    board.fire(random_player, (0, 0))
+    board.fire(random_player, (0, 1))
+    board.fire(random_player, (1, 1))
+    assert board.hits(board.other_player) == 2
+
+
+def test_hits_multiple_ships(get_board, random_player):
+    board = get_board
+    board.current_player = random_player
+    other_player = board.other_player
+    board.place_ship(other_player, (0, 0), 2, Ship.RIGHT)
+    board.place_ship(other_player, (3, 3), 2, Ship.DOWN)
+    board.fire(random_player, (0, 0))
+    board.fire(random_player, (3, 4))
+    assert set(board.hit_coordinates(other_player)) == {(0, 0), (3, 4)}
+
+
+def test_possible_moves(get_board, random_player):
+    board = get_board
+    coordinates = board.cell_coordinates
+    assert set(board.get_possible_moves(random_player)) == set(coordinates)
+
+
+def test_possible_moves_after_shot(get_board, random_player):
+    board = get_board
+    coordinates = board.cell_coordinates
+    fired_upon_coordinate = random.choice(coordinates)
+    board.fire(player=random_player, coordinate=fired_upon_coordinate)
+    assert fired_upon_coordinate not in board.get_possible_moves(random_player)
