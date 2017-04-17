@@ -6,5 +6,5 @@ setup(name='Battleship',
       author='Marco Plaisier',
       author_email='m.plaisier@gmail.com',
       url=None,
-      packages=['board']
+      packages=['src/game']
       )
