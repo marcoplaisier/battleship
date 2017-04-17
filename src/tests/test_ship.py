@@ -1,6 +1,6 @@
 import pytest
 
-from board import Ship
+from game.board import Ship
 
 
 def test_is_overlapping():

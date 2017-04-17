@@ -2,7 +2,7 @@ import random
 
 from behave import *
 
-from board import Board, PlacementError
+from game.board import Board, PlacementError
 
 use_step_matcher("parse")
 

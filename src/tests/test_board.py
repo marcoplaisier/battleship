@@ -1,9 +1,7 @@
 import random
-from unittest import TestCase
-
 import pytest
 
-from board import Board, CoordinateError, PlacementError
+from game.board import Board, CoordinateError, PlacementError
 
 
 @pytest.fixture
