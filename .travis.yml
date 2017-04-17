@@ -14,7 +14,7 @@ before_install:
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install -I behave==1.2.4; fi
   - pip install -r requirements.txt
-  - python setup.py install .
+  - python setup.py install
 script:
   - pytest
   - behave
